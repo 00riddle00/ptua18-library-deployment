@@ -1,0 +1,8 @@
+.language-switcher select {
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: var(--header-bg); /* Match Django Admin theme */
+  color: var(--header-link-color);
+  border: 1px solid var(--hairline-color);
+}

@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}
+  <link rel="icon" href="{% static 'library/img/favicon.ico' %}" type="image/x-icon" />
+  <link rel="stylesheet" href="{% static 'library/css/admin.css' %}" />
+{% endblock %}
+
+{% block title %}
+  {% if subtitle %}{{ subtitle }} |{% endif %}{{ title }}
+  | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block branding %}
+  <div id="site-name"><a href="{% url 'admin:index' %}">{% trans "Library Administration" %}</a></div>
+  {% if user.is_anonymous %}
+    {% include "admin/color_theme_toggle.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block usertools %}
+  <div id="lang">
+    <form action="{% url 'set_language' %}" method="post" class="language-switcher">
+      {% csrf_token %}
+      <select name="language" onchange="this.form.submit();">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% for lang in LANGUAGES %}
+          <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>{{ lang.1 }}</option>
+        {% endfor %}
+      </select>
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+    </form>
+  </div>
+  {{ block.super }}
+{% endblock %}

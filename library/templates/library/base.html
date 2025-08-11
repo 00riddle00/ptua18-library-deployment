@@ -1,0 +1,158 @@
+<!doctype html>
+{% load i18n %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% block title %}<title>Biblioteka</title>{% endblock %}
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <link rel="icon" href="{% static 'library/img/favicon.ico' %}" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'library/css/styles.css' %}" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'index' %}"
+          ><img src="{% static 'library/img/book.png' %}" alt="Book icon" height="30px"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'books' %}">Visos knygos</a>
+            </li>
+            {% if user.is_authenticated %}
+              {% if perms.library.add_bookinstance %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'create-book-instance' %}">Prideti knygos egzemplioriu</a>
+                </li>
+              {% endif %}
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'authors' %}">Visi autoriai</a>
+            </li>
+            <li class="nav-item dropdown">
+              {% if user.is_authenticated %}
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <svg
+                    class="bi bi-person"
+                    width="1.5em"
+                    height="1.5em"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M13 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM3.022 13h9.956a.274.274 0 00.014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 00.022.004zm9.974.056v-.002.002zM8 7a2 2 0 100-4 2 2 0 000 4zm3-2a3 3 0 11-6 0 3 3 0 016 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  {{ user.get_username }}
+                </a>
+                <ul class="dropdown-menu">
+                  {% if perms.library.view_bookinstance %}
+                    <li><a class="dropdown-item" href="{% url 'my-loaned-books' %}">Mano knygos</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="{% url 'password_change' %}">Pakeisti slaptažodį</a></li>
+                  <li><a class="dropdown-item" href="{% url 'profile' %}">Profilis</a></li>
+                  <li>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                      {% csrf_token %}
+                      <button class="dropdown-item" type="submit">Atsijungti</button>
+                    </form>
+                  </li>
+                </ul>
+              {% else %}
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <svg
+                    class="bi bi-person"
+                    width="1.5em"
+                    height="1.5em"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M13 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM3.022 13h9.956a.274.274 0 00.014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 00.022.004zm9.974.056v-.002.002zM8 7a2 2 0 100-4 2 2 0 000 4zm3-2a3 3 0 11-6 0 3 3 0 016 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'login' %}">Prisijungti</a></li>
+                  <li><a class="dropdown-item" href="{% url 'register' %}">Registruotis</a></li>
+                </ul>
+              {% endif %}
+            </li>
+          </ul>
+
+          <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ redirect_to }}" />
+            <select name="language" onchange="this.form.submit()">
+              {% get_current_language as LANGUAGE_CODE %}
+              {% get_available_languages as LANGUAGES %}
+              {% for lang in LANGUAGES %}
+                <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>
+                  {{ lang.1 }}
+                </option>
+              {% endfor %}
+            </select>
+          </form>
+          &nbsp &nbsp
+          <form action="{% url 'search' %}" method="get" class="d-flex" role="search">
+            <input class="form-control me-2" name="query" type="search" placeholder="Paieška" aria-label="Search" />
+            <button class="btn btn-outline-success" type="submit">Ieškoti</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %}" role="alert">
+            {{ msg|safe }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+      {% endblock %}
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

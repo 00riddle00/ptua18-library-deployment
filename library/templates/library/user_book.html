@@ -1,0 +1,15 @@
+{% extends "library/base.html" %}
+
+{% block content %}
+  <h1>Mano paimta knyga:</h1>
+  <hr />
+  <ul>
+    <img class="rounded-circle" src="{{ loaned_book.reader.profile.photo.url }}" width="50" height="50" />
+    <li>
+      <strong class="{% if loaned_book.is_overdue %}text-danger{% endif %}"
+        >Pavadinimas: {{ loaned_book.book.title }}</strong
+      >
+    </li>
+    <li><strong>Grąžinimo terminas:</strong> {{ loaned_book.due_back }}</li>
+  </ul>
+{% endblock %}

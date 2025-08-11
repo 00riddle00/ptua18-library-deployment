@@ -1,0 +1,20 @@
+{% extends "library/base.html" %}
+
+{% block content %}
+  <h1>Mano paimtos knygos</h1>
+
+  {% if loaned_books %}
+    <ul>
+      {% for loaned_book in loaned_books %}
+        <img class="rounded-circle" src="{{ loaned_book.reader.profile.photo.url }}" width="50" height="50" />
+        <li class="{% if loaned_book.is_overdue %}text-danger{% endif %}">
+          <a href="{% url 'my-loaned-book' loaned_book.pk %}">{{ loaned_book.book.title }}</a>
+          ({{ loaned_book.due_back }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Šiuo metu iš mūsų nesate paėmę knygų.</p>
+  {% endif %}
+{% endblock %}
+http://127.0.0.1:8000/library/books/1 http://127.0.0.1:8000/library/mybooks/1

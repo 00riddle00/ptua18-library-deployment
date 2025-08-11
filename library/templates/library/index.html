@@ -1,0 +1,14 @@
+{% extends "library/base.html" %}
+{% load i18n %}
+{% block content %}
+  <h1>{% trans "District library" %}</h1>
+  <p>{% trans "Welcome to Book Heaven!" %}</p>
+  <p>{% trans "At the moment we have:" %}</p>
+  <ul>
+    <li><strong>{% trans "Books:" %}</strong> {{ num_books }}</li>
+    <li><strong>{% trans "Instances:" %}</strong> {{ num_instances }}</li>
+    <li><strong>{% trans "Free instances:" %}</strong> {{ num_instances_available }}</li>
+    <li><strong>{% trans "Authors:" %}</strong> {{ num_authors }}</li>
+  </ul>
+  <p>{% blocktrans %}You are here for the {{ num_visits }} time.{% endblocktrans %}</p>
+{% endblock %}
