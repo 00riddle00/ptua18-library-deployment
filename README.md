@@ -30,7 +30,13 @@ $ python3.13 -m .venv .venv
 
 ## Running
 
-##### [1] Prepare the database:
+##### [1] Set the environment variables:
+
+Create a `.env` file in the project's root directory and add your 
+environment variables to this file. See the [.env.example](.env.example)
+file for the specific environment variables that need to be defined.
+
+##### [2] Prepare the database:
 
 Since the SQLite database file is stored in this Git repo, if you would like to
 use a fresh new database, remove the file [db.sqlite3](db.sqlite3), 
@@ -71,7 +77,7 @@ User of a `reader` group:
  
 The password for all other users (clients) in the database is `rorosroros1`.
 
-##### [2] Run the development server:
+##### [3] Run the development server:
 
 Finally, run the development server:
 
